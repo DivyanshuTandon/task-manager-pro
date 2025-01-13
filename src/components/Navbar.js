@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-// Added a backdated contribution
 
 const Navbar = () => {
   return (
