@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
 
-const Home = () => <div className="p-4">Welcome to Task Manager Pro!</div>;
 const Tasks = () => <div className="p-4">Here are your tasks!</div>;
 
 const App = () => {
