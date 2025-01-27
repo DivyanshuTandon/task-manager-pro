@@ -2,8 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
-
-const Tasks = () => <div className="p-4">Here are your tasks!</div>;
+import Tasks from "./pages/Task";
 
 const App = () => {
   return (
