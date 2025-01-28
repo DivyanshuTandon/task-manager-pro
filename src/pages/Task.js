@@ -7,15 +7,47 @@ const Tasks = () => {
     { id: 3, text: "Review PRs", completed: true },
   ]);
 
+  const [newTask, setNewTask] = useState("");
+
+  const addTask = () => {
+    if (newTask.trim() !== "") {
+      setTasks([
+        ...tasks,
+        { id: Date.now(), text: newTask, completed: false },
+      ]);
+      setNewTask("");
+    }
+  };
+
   const toggleTaskCompletion = (id) => {
-    setTasks(tasks.map((task) =>
-      task.id === id ? { ...task, completed: !task.completed } : task
-    ));
+    setTasks(
+      tasks.map((task) =>
+        task.id === id ? { ...task, completed: !task.completed } : task
+      )
+    );
   };
 
   return (
     <div className="p-4">
       <h2 className="text-2xl font-bold text-blue-600 mb-4">Your Tasks</h2>
+      {/* Task Creation Input */}
+      <div className="mb-4 flex space-x-2">
+        <input
+          type="text"
+          value={newTask}
+          onChange={(e) => setNewTask(e.target.value)}
+          placeholder="Add a new task"
+          className="w-full p-2 border rounded-lg"
+        />
+        <button
+          onClick={addTask}
+          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+        >
+          Add Task
+        </button>
+      </div>
+
+      {/* Task List */}
       <div className="space-y-4">
         {tasks.map((task) => (
           <div
