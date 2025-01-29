@@ -11,10 +11,7 @@ const Tasks = () => {
 
   const addTask = () => {
     if (newTask.trim() !== "") {
-      setTasks([
-        ...tasks,
-        { id: Date.now(), text: newTask, completed: false },
-      ]);
+      setTasks([...tasks, { id: Date.now(), text: newTask, completed: false }]);
       setNewTask("");
     }
   };
@@ -27,9 +24,14 @@ const Tasks = () => {
     );
   };
 
+  const deleteTask = (id) => {
+    setTasks(tasks.filter((task) => task.id !== id));
+  };
+
   return (
     <div className="p-4">
       <h2 className="text-2xl font-bold text-blue-600 mb-4">Your Tasks</h2>
+      
       {/* Task Creation Input */}
       <div className="mb-4 flex space-x-2">
         <input
@@ -52,19 +54,27 @@ const Tasks = () => {
         {tasks.map((task) => (
           <div
             key={task.id}
-            className={`flex items-center space-x-4 p-2 rounded-lg ${
+            className={`flex justify-between items-center space-x-4 p-2 rounded-lg ${
               task.completed ? "bg-green-100" : "bg-gray-100"
             }`}
           >
-            <input
-              type="checkbox"
-              checked={task.completed}
-              onChange={() => toggleTaskCompletion(task.id)}
-              className="w-5 h-5"
-            />
-            <span className={task.completed ? "line-through text-gray-500" : ""}>
-              {task.text}
-            </span>
+            <div className="flex items-center space-x-4">
+              <input
+                type="checkbox"
+                checked={task.completed}
+                onChange={() => toggleTaskCompletion(task.id)}
+                className="w-5 h-5"
+              />
+              <span className={task.completed ? "line-through text-gray-500" : ""}>
+                {task.text}
+              </span>
+            </div>
+            <button
+              onClick={() => deleteTask(task.id)}
+              className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 transition"
+            >
+              Delete
+            </button>
           </div>
         ))}
       </div>
