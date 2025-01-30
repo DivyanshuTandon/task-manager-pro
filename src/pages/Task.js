@@ -1,37 +1,47 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const Tasks = () => {
-  const [tasks, setTasks] = useState([
-    { id: 1, text: "Complete React Project", completed: false },
-    { id: 2, text: "Write GitHub Readme", completed: false },
-    { id: 3, text: "Review PRs", completed: true },
-  ]);
+  const [tasks, setTasks] = useState([]);
 
   const [newTask, setNewTask] = useState("");
 
+  // Load tasks from local storage on mount
+  useEffect(() => {
+    const storedTasks = JSON.parse(localStorage.getItem("tasks"));
+    if (storedTasks) {
+      setTasks(storedTasks);
+    }
+  }, []);
+
+  // Save tasks to local storage whenever they change
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
+
   const addTask = () => {
     if (newTask.trim() !== "") {
-      setTasks([...tasks, { id: Date.now(), text: newTask, completed: false }]);
+      const updatedTasks = [...tasks, { id: Date.now(), text: newTask, completed: false }];
+      setTasks(updatedTasks);
       setNewTask("");
     }
   };
 
   const toggleTaskCompletion = (id) => {
-    setTasks(
-      tasks.map((task) =>
-        task.id === id ? { ...task, completed: !task.completed } : task
-      )
+    const updatedTasks = tasks.map((task) =>
+      task.id === id ? { ...task, completed: !task.completed } : task
     );
+    setTasks(updatedTasks);
   };
 
   const deleteTask = (id) => {
-    setTasks(tasks.filter((task) => task.id !== id));
+    const updatedTasks = tasks.filter((task) => task.id !== id);
+    setTasks(updatedTasks);
   };
 
   return (
     <div className="p-4">
       <h2 className="text-2xl font-bold text-blue-600 mb-4">Your Tasks</h2>
-      
+
       {/* Task Creation Input */}
       <div className="mb-4 flex space-x-2">
         <input
