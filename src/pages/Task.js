@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Tasks = () => {
   const [tasks, setTasks] = useState([]);
-
   const [newTask, setNewTask] = useState("");
 
-  // Load tasks from local storage on mount
   useEffect(() => {
     const storedTasks = JSON.parse(localStorage.getItem("tasks"));
     if (storedTasks) {
@@ -13,7 +12,6 @@ const Tasks = () => {
     }
   }, []);
 
-  // Save tasks to local storage whenever they change
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
@@ -27,22 +25,20 @@ const Tasks = () => {
   };
 
   const toggleTaskCompletion = (id) => {
-    const updatedTasks = tasks.map((task) =>
+    setTasks(tasks.map((task) => 
       task.id === id ? { ...task, completed: !task.completed } : task
-    );
-    setTasks(updatedTasks);
+    ));
   };
 
   const deleteTask = (id) => {
-    const updatedTasks = tasks.filter((task) => task.id !== id);
-    setTasks(updatedTasks);
+    setTasks(tasks.filter((task) => task.id !== id));
   };
 
   return (
     <div className="p-4">
       <h2 className="text-2xl font-bold text-blue-600 mb-4">Your Tasks</h2>
 
-      {/* Task Creation Input */}
+      {/* Task Input */}
       <div className="mb-4 flex space-x-2">
         <input
           type="text"
@@ -59,12 +55,16 @@ const Tasks = () => {
         </button>
       </div>
 
-      {/* Task List */}
-      <div className="space-y-4">
+      {/* Task List with Animations */}
+      <AnimatePresence>
         {tasks.map((task) => (
-          <div
+          <motion.div
             key={task.id}
-            className={`flex justify-between items-center space-x-4 p-2 rounded-lg ${
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, x: -50 }}
+            layout
+            className={`flex justify-between items-center p-2 rounded-lg mb-2 ${
               task.completed ? "bg-green-100" : "bg-gray-100"
             }`}
           >
@@ -85,9 +85,9 @@ const Tasks = () => {
             >
               Delete
             </button>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </AnimatePresence>
     </div>
   );
 };
