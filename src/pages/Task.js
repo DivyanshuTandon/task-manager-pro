@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 
 const Tasks = () => {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState("");
 
+  // Load tasks from localStorage when the component mounts
   useEffect(() => {
     const storedTasks = JSON.parse(localStorage.getItem("tasks"));
     if (storedTasks) {
@@ -12,6 +12,7 @@ const Tasks = () => {
     }
   }, []);
 
+  // Save tasks to localStorage whenever tasks change
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
@@ -25,7 +26,7 @@ const Tasks = () => {
   };
 
   const toggleTaskCompletion = (id) => {
-    setTasks(tasks.map((task) => 
+    setTasks(tasks.map((task) =>
       task.id === id ? { ...task, completed: !task.completed } : task
     ));
   };
@@ -38,7 +39,6 @@ const Tasks = () => {
     <div className="p-4">
       <h2 className="text-2xl font-bold text-blue-600 mb-4">Your Tasks</h2>
 
-      {/* Task Input */}
       <div className="mb-4 flex space-x-2">
         <input
           type="text"
@@ -55,39 +55,21 @@ const Tasks = () => {
         </button>
       </div>
 
-      {/* Task List with Animations */}
-      <AnimatePresence>
-        {tasks.map((task) => (
-          <motion.div
-            key={task.id}
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            layout
-            className={`flex justify-between items-center p-2 rounded-lg mb-2 ${
-              task.completed ? "bg-green-100" : "bg-gray-100"
-            }`}
-          >
-            <div className="flex items-center space-x-4">
-              <input
-                type="checkbox"
-                checked={task.completed}
-                onChange={() => toggleTaskCompletion(task.id)}
-                className="w-5 h-5"
-              />
-              <span className={task.completed ? "line-through text-gray-500" : ""}>
-                {task.text}
-              </span>
-            </div>
-            <button
-              onClick={() => deleteTask(task.id)}
-              className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 transition"
-            >
+      {tasks.map((task) => (
+        <div key={task.id} className={`flex justify-between p-2 mb-2 rounded-lg ${task.completed ? "bg-green-100" : "bg-gray-100"}`}>
+          <span className={task.completed ? "line-through text-gray-500" : ""}>
+            {task.text}
+          </span>
+          <div className="space-x-2">
+            <button onClick={() => toggleTaskCompletion(task.id)} className="bg-yellow-500 text-white px-3 py-1 rounded-lg">
+              {task.completed ? "Undo" : "Complete"}
+            </button>
+            <button onClick={() => deleteTask(task.id)} className="bg-red-500 text-white px-3 py-1 rounded-lg">
               Delete
             </button>
-          </motion.div>
-        ))}
-      </AnimatePresence>
+          </div>
+        </div>
+      ))}
     </div>
   );
 };
